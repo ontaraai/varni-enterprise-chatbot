@@ -5,10 +5,15 @@ const logger = require('../utils/logger');
 const { parseWebhookPayload } = require('../utils/messageParser');
 const { markdownToWhatsApp } = require('../utils/whatsappFormatter');
 const { isDuplicate } = require('../utils/dedup');
+const { verifyWebhookSignature } = require('../middleware/signature');
+const { rateLimiter } = require('../middleware/rateLimiter');
 const whatsappService = require('../services/whatsapp.service');
 const conversationService = require('../services/conversation.service');
 const openaiService = require('../services/openai.service');
 const escalationService = require('../services/escalation.service');
+
+// Rate limit for webhook POST (Meta sends many status updates)
+const webhookLimiter = rateLimiter({ windowMs: 60000, max: 1000, label: 'webhook' });
 
 /**
  * GET /webhook — Meta Webhook Verification
@@ -39,7 +44,7 @@ router.get('/', (req, res) => {
  * Meta sends all incoming messages, status updates, and events here.
  * We must return 200 OK within 5 seconds or Meta will retry.
  */
-router.post('/', async (req, res) => {
+router.post('/', webhookLimiter, verifyWebhookSignature, async (req, res) => {
   // Always respond 200 immediately — Meta requires this within 5 seconds
   res.sendStatus(200);
 

@@ -3,7 +3,6 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const config = require('./config/env');
 const logger = require('./utils/logger');
-const { verifyWebhookSignature } = require('./middleware/signature');
 const { rateLimiter } = require('./middleware/rateLimiter');
 const webhookRoutes = require('./routes/webhook.routes');
 const adminRoutes = require('./routes/admin.routes');
@@ -15,12 +14,10 @@ const app = express();
 // ---------------------
 const allowedOrigins = [
   'http://localhost:5173', // local Vite dev server
-  'http://localhost:4173', // local Vite preview
 ];
 
 if (process.env.DASHBOARD_URL) {
-  // Strip trailing slash to avoid mismatch
-  allowedOrigins.push(process.env.DASHBOARD_URL.replace(/\/+$/, ''));
+  allowedOrigins.push(process.env.DASHBOARD_URL);
 }
 
 app.use(
@@ -28,11 +25,7 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (curl, mobile apps, server-to-server)
       if (!origin) return callback(null, true);
-      // Exact match
       if (allowedOrigins.includes(origin)) return callback(null, true);
-      // Allow any *.onrender.com subdomain in production
-      if (config.isProd && origin.endsWith('.onrender.com')) return callback(null, true);
-      logger.warn('🚫 CORS rejected origin', { origin });
       callback(null, false);
     },
     credentials: true,
@@ -59,12 +52,6 @@ const adminLimiter = rateLimiter({
   label: 'admin-api',
 });
 
-const webhookLimiter = rateLimiter({
-  windowMs: 60 * 1000,
-  max: 1000,
-  label: 'webhook',
-});
-
 // ---------------------
 // Routes
 // ---------------------
@@ -87,11 +74,8 @@ app.get('/privacy', (_req, res) => {
 <h2>Contact</h2><p>For privacy concerns, contact Varni Packaging at varnipackaging1@gmail.com.</p></body></html>`);
 });
 
-// Webhook: GET verification (no signature check, no rate limit)
-app.get('/webhook', webhookRoutes);
-
-// Webhook: POST messages (signature + rate limit)
-app.post('/webhook', webhookLimiter, verifyWebhookSignature, webhookRoutes);
+// Webhook routes (signature + rate limit applied inside the router for POST only)
+app.use('/webhook', webhookRoutes);
 
 // Admin dashboard API (rate limited)
 app.use('/api/admin', adminLimiter, adminRoutes);
