@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment files (contain secrets)
+.env
+.env.local
+.env.production
+
+# Build output
+dashboard/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Debug
+npm-debug.log*
+
+# Misc
+.antigravityignore
