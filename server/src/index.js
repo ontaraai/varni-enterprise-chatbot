@@ -15,10 +15,12 @@ const app = express();
 // ---------------------
 const allowedOrigins = [
   'http://localhost:5173', // local Vite dev server
+  'http://localhost:4173', // local Vite preview
 ];
 
 if (process.env.DASHBOARD_URL) {
-  allowedOrigins.push(process.env.DASHBOARD_URL);
+  // Strip trailing slash to avoid mismatch
+  allowedOrigins.push(process.env.DASHBOARD_URL.replace(/\/+$/, ''));
 }
 
 app.use(
@@ -26,7 +28,11 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (curl, mobile apps, server-to-server)
       if (!origin) return callback(null, true);
+      // Exact match
       if (allowedOrigins.includes(origin)) return callback(null, true);
+      // Allow any *.onrender.com subdomain in production
+      if (config.isProd && origin.endsWith('.onrender.com')) return callback(null, true);
+      logger.warn('🚫 CORS rejected origin', { origin });
       callback(null, false);
     },
     credentials: true,
