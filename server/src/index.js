@@ -63,15 +63,62 @@ app.get('/health', (_req, res) => {
 
 // Privacy Policy (required for Meta app publishing)
 app.get('/privacy', (_req, res) => {
-  res.send(`<!DOCTYPE html><html><head><title>Privacy Policy - Varni Packaging</title>
-<style>body{font-family:Arial,sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#333;line-height:1.6}h1{color:#1a1a2e}</style></head>
-<body><h1>Privacy Policy — Varni Packaging WhatsApp Chatbot</h1>
-<p><strong>Last updated:</strong> May 2026</p>
-<h2>Information We Collect</h2><p>When you interact with our WhatsApp chatbot, we collect your WhatsApp phone number, profile name, and message content to provide product information and customer support.</p>
-<h2>How We Use Your Information</h2><p>We use your information solely to respond to your product inquiries, provide pricing information, and connect you with our team when needed.</p>
-<h2>Data Storage</h2><p>Conversation data is stored securely in our database and is used only for providing customer service.</p>
-<h2>Third-Party Services</h2><p>We use Meta's WhatsApp Cloud API for messaging and OpenAI for generating responses. These services process your messages according to their respective privacy policies.</p>
-<h2>Contact</h2><p>For privacy concerns, contact Varni Packaging at varnipackaging1@gmail.com.</p></body></html>`);
+  res.send(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy - Ontara Connect</title>
+<style>
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#2d2d2d;line-height:1.8;background:#fafafa}
+  h1{color:#111;border-bottom:2px solid #111;padding-bottom:10px}
+  h2{color:#333;margin-top:30px}
+  p,li{color:#444}
+  ul{padding-left:20px}
+  .updated{color:#666;font-size:0.9em}
+  a{color:#0066cc}
+</style></head>
+<body>
+<h1>Privacy Policy — Ontara Connect</h1>
+<p class="updated"><strong>Last updated:</strong> June 2026</p>
+<p>Ontara Connect ("we", "our", "us") is a business messaging platform operated by Ontara AI. This Privacy Policy explains how we collect, use, store, and protect information when businesses and their customers interact through our WhatsApp-based messaging services.</p>
+
+<h2>1. Information We Collect</h2>
+<p>We collect the following types of information:</p>
+<ul>
+<li><strong>Business Account Information:</strong> When a business signs up via our platform, we collect their WhatsApp Business Account details, phone number, business name, and authorized representative information through Meta's Embedded Signup flow.</li>
+<li><strong>End-User Message Data:</strong> When customers message a business through WhatsApp, we process the sender's phone number, profile name, message content, and timestamps to facilitate automated responses and customer support.</li>
+<li><strong>Usage Data:</strong> We collect analytics on message volumes, response times, and platform usage to improve our services.</li>
+</ul>
+
+<h2>2. How We Use Your Information</h2>
+<ul>
+<li>To provide AI-powered automated customer support on behalf of our business clients</li>
+<li>To route customer inquiries to the appropriate business representative when escalation is needed</li>
+<li>To manage and display conversation history in the business admin dashboard</li>
+<li>To improve our platform's response quality and reliability</li>
+</ul>
+
+<h2>3. Data Storage and Security</h2>
+<p>All data is stored securely in encrypted databases. We implement industry-standard security measures including HTTPS encryption, webhook signature verification, and access controls. Conversation data is retained only as long as necessary to provide our services or as required by law.</p>
+
+<h2>4. Third-Party Services</h2>
+<p>Our platform integrates with the following third-party services:</p>
+<ul>
+<li><strong>Meta WhatsApp Cloud API:</strong> For sending and receiving WhatsApp messages. Subject to <a href="https://www.whatsapp.com/legal/privacy-policy" target="_blank">WhatsApp's Privacy Policy</a>.</li>
+<li><strong>OpenAI:</strong> For generating intelligent automated responses. Subject to <a href="https://openai.com/privacy" target="_blank">OpenAI's Privacy Policy</a>.</li>
+<li><strong>MongoDB:</strong> For secure data storage.</li>
+</ul>
+
+<h2>5. Business Client Responsibilities</h2>
+<p>Businesses using Ontara Connect are responsible for informing their own customers about the use of automated messaging services and ensuring compliance with applicable data protection regulations in their jurisdiction.</p>
+
+<h2>6. Your Rights</h2>
+<p>You may request access to, correction of, or deletion of your personal data by contacting us. Business clients can manage their data through the Ontara Connect admin dashboard.</p>
+
+<h2>7. Changes to This Policy</h2>
+<p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated revision date.</p>
+
+<h2>8. Contact Us</h2>
+<p>For privacy concerns or data requests, contact Ontara AI:<br>
+Email: <a href="mailto:ontaraai@gmail.com">ontaraai@gmail.com</a></p>
+</body></html>`);
 });
 
 // Webhook routes (signature + rate limit applied inside the router for POST only)
